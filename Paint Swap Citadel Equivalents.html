@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2775.1">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="en"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1">&lt;meta charset="utf-8"&gt;</p>
+<p class="p1">&lt;meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"&gt;</p>
+<p class="p1">&lt;title&gt;Paint Swap: Citadel equivalents&lt;/title&gt;</p>
+<p class="p1">&lt;style&gt;</p>
+<p class="p1">:root{--bg:#f2efe9;--card:#fff;--ink:#23201c;--mute:#6b645b;--line:#d9d3c8;--acc:#7a3b1d;--tag:#e7e1d4;</p>
+<p class="p1">box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</p>
+<p class="p1">@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1c1a17;--card:#262320;--ink:#ede7dc;--mute:#9d9488;--line:#3a352f;--acc:#e0a46f;--tag:#34302a}}</p>
+<p class="p1">:root[data-theme="dark"]{--bg:#1c1a17;--card:#262320;--ink:#ede7dc;--mute:#9d9488;--line:#3a352f;--acc:#e0a46f;--tag:#34302a}</p>
+<p class="p1">html{scroll-padding-top:env(safe-area-inset-top,0px)}</p>
+<p class="p1">*{box-sizing:border-box}</p>
+<p class="p1">body{margin:0;background:var(--bg);color:var(--ink);font-family:Georgia,"Iowan Old Style",serif;line-height:1.5}</p>
+<p class="p1">main{max-width:760px;margin:0 auto;padding:28px 16px 60px}</p>
+<p class="p1">h1{font-size:2rem;margin:0 0 4px;letter-spacing:-.01em}</p>
+<p class="p1">.sub{color:var(--mute);margin:0 0 20px;font-size:.95rem}</p>
+<p class="p1">.bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}</p>
+<p class="p1">input[type=search]{flex:1 1 220px;padding:12px 14px;font:inherit;border:1.5px solid var(--line);border-radius:6px;background:var(--card);color:var(--ink)}</p>
+<p class="p1">input:focus,button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}</p>
+<p class="p1">.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}</p>
+<p class="p1">button.chip{font:inherit;font-size:.85rem;padding:6px 12px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:20px;cursor:pointer}</p>
+<p class="p1">button.chip[aria-pressed=true]{background:var(--acc);border-color:var(--acc);color:var(--bg)}</p>
+<p class="p1">.row{background:var(--card);border:1px solid var(--line);border-radius:6px;margin-bottom:10px;display:grid;grid-template-columns:10px 1fr;overflow:hidden}</p>
+<p class="p1">.sw{display:block}</p>
+<p class="p1">.body{padding:12px 14px}</p>
+<p class="p1">.name{font-weight:700;font-size:1.05rem}</p>
+<p class="p1">.type{font-size:.8rem;color:var(--mute);margin-left:6px;font-weight:400}</p>
+<p class="p1">.eq{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;margin-top:8px}</p>
+<p class="p1">.eq div{font-size:.92rem}</p>
+<p class="p1">.eq b{display:block;font-size:.75rem;color:var(--mute);font-weight:400}</p>
+<p class="p1">.m{display:inline-block;font-size:.72rem;padding:1px 7px;border-radius:10px;background:var(--tag);margin-left:6px;color:var(--mute)}</p>
+<p class="p1">.empty{color:var(--mute);padding:24px 0;text-align:center}</p>
+<p class="p1">.note{font-size:.82rem;color:var(--mute);margin-top:24px;border-top:1px solid var(--line);padding-top:12px}</p>
+<p class="p1">@media(max-width:480px){.eq{grid-template-columns:1fr}}</p>
+<p class="p1">&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body&gt;</p>
+<p class="p1">&lt;main&gt;</p>
+<p class="p1">&lt;h1&gt;Paint Swap&lt;/h1&gt;</p>
+<p class="p1">&lt;p class="sub"&gt;Find the Vallejo or Army Painter paint closest to a Citadel colour.&lt;/p&gt;</p>
+<p class="p1">&lt;div class="bar"&gt;&lt;input id="q" type="search" placeholder="Search a Citadel paint, e.g. Waaagh! Flesh" aria-label="Search Citadel paint"&gt;&lt;/div&gt;</p>
+<p class="p1">&lt;div class="chips" id="chips"&gt;&lt;/div&gt;</p>
+<p class="p1">&lt;div id="list"&gt;&lt;/div&gt;</p>
+<p class="p1">&lt;p class="note"&gt;Matches are best-effort colour approximations, not exact. "Close" means very similar; "Rough" means nearest available, so check swatches in person. Vallejo names are from the Game Color range. Colour dots are approximate.&lt;/p&gt;</p>
+<p class="p1">&lt;/main&gt;</p>
+<p class="p1">&lt;script&gt;</p>
+<p class="p1">// [citadel, type, hex, vallejo, vallejoMatch, armyPainter, apMatch, group]</p>
+<p class="p1">const P=[</p>
+<p class="p1">["Waaagh! Flesh","Base","#1f6b3a","Goblin Green","Rough","Greenskin","Rough","Green"],</p>
+<p class="p1">["Warboss Green","Base","#3e8a3c","Goblin Green","Close","Greenskin","Close","Green"],</p>
+<p class="p1">["Moot Green","Layer","#4fb04a","Scurvy Green","Rough","Angel Green","Rough","Green"],</p>
+<p class="p1">["Caliban Green","Base","#00401d","Dark Green","Close","Forest Green","Rough","Green"],</p>
+<p class="p1">["Castellan Green","Base","#264715","Camouflage Green","Rough","Forest Green","Rough","Green"],</p>
+<p class="p1">["Loren Forest","Layer","#4c6b2b","Camouflage Green","Rough","Goblin Green","Rough","Green"],</p>
+<p class="p1">["Sybarite Green","Layer","#2fa56f","Jade Green","Rough","Hydra Turquoise","Rough","Green"],</p>
+<p class="p1">["Death Guard Green","Base","#8b9560","Bonewhite mixed with Camouflage Green","Rough","Necrotic Flesh","Rough","Green"],</p>
+<p class="p1">["Mephiston Red","Base","#9a1115","Bloody Red","Close","Dragon Red","Close","Red"],</p>
+<p class="p1">["Evil Sunz Scarlet","Layer","#c01411","Scarlett Red","Close","Pure Red","Close","Red"],</p>
+<p class="p1">["Wild Rider Red","Layer","#e82e1c","Hot Orange","Rough","Lava Orange","Rough","Red"],</p>
+<p class="p1">["Khorne Red","Base","#6a0001","Bloody Red (darkened)","Rough","Deep Red","Rough","Red"],</p>
+<p class="p1">["Jokaero Orange","Layer","#ee3823","Orange Fire","Close","Lava Orange","Close","Orange"],</p>
+<p class="p1">["Troll Slayer Orange","Layer","#f4633a","Orange Fire","Close","Fire Giant Orange","Close","Orange"],</p>
+<p class="p1">["Averland Sunset","Base","#fdb825","Sun Yellow","Close","Daemonic Yellow","Close","Yellow"],</p>
+<p class="p1">["Yriel Yellow","Layer","#ffdb00","Moon Yellow","Close","Daemonic Yellow","Close","Yellow"],</p>
+<p class="p1">["Macragge Blue","Base","#0f3d7c","Imperial Blue","Close","Ultramarine Blue","Rough","Blue"],</p>
+<p class="p1">["Ultramarines Blue","Base","#0057a7","Ultramarine Blue","Close","Electric Blue","Rough","Blue"],</p>
+<p class="p1">["Altdorf Guard Blue","Layer","#1f56a8","Magic Blue","Rough","Ultramarine Blue","Close","Blue"],</p>
+<p class="p1">["Teclis Blue","Layer","#3877be","Glacier Blue","Rough","Crystal Blue","Close","Blue"],</p>
+<p class="p1">["Kantor Blue","Base","#02134e","Dark Blue","Close","Deep Blue","Close","Blue"],</p>
+<p class="p1">["Leadbelcher","Base","#888d8f","Gunmetal","Close","Gun Metal","Close","Metal"],</p>
+<p class="p1">["Ironbreaker","Layer","#a1a6a9","Plate Mail Metal","Close","Plate Mail Metal","Close","Metal"],</p>
+<p class="p1">["Runefang Steel","Layer","#c3cbd1","Silver","Close","Shining Silver","Close","Metal"],</p>
+<p class="p1">["Retributor Armour","Base","#c39e51","Glorious Gold","Close","Greedy Gold","Close","Metal"],</p>
+<p class="p1">["Balthasar Gold","Base","#a47552","Polished Gold","Rough","Weapon Bronze","Rough","Metal"],</p>
+<p class="p1">["Warplock Bronze","Base","#6e5236","Bright Bronze","Rough","True Copper","Rough","Metal"],</p>
+<p class="p1">["Abaddon Black","Base","#231f20","Black","Close","Matt Black","Close","Neutral"],</p>
+<p class="p1">["Corvus Black","Base","#0b1115","Black","Close","Matt Black","Close","Neutral"],</p>
+<p class="p1">["Mechanicus Standard Grey","Base","#3d4b4d","Heavy Charcoal","Rough","Uniform Grey","Rough","Neutral"],</p>
+<p class="p1">["Dawnstone","Layer","#70756e","Stonewall Grey","Rough","Ash Grey","Rough","Neutral"],</p>
+<p class="p1">["Administratum Grey","Layer","#949b95","Stonewall Grey","Close","Wolf Grey","Rough","Neutral"],</p>
+<p class="p1">["Ceramite White","Base","#ffffff","Dead White","Close","Matt White","Close","Neutral"],</p>
+<p class="p1">["White Scar","Layer","#ffffff","Dead White","Close","Matt White","Close","Neutral"],</p>
+<p class="p1">["Screaming Skull","Layer","#bbbc8f","Bonewhite","Rough","Skeleton Bone","Close","Neutral"],</p>
+<p class="p1">["Zandri Dust","Base","#9c8c54","Khaki","Rough","Desert Yellow","Rough","Brown"],</p>
+<p class="p1">["Ushabti Bone","Layer","#b9ae7c","Bonewhite","Close","Skeleton Bone","Close","Brown"],</p>
+<p class="p1">["Rhinox Hide","Base","#462f30","Charred Brown","Close","Oak Brown","Rough","Brown"],</p>
+<p class="p1">["Mournfang Brown","Base","#640909","Beasty Brown","Rough","Fur Brown","Rough","Brown"],</p>
+<p class="p1">["Steel Legion Drab","Base","#615c4b","Khaki","Rough","Leather Brown","Rough","Brown"],</p>
+<p class="p1">["Skrag Brown","Base","#8b4e1f","Beasty Brown","Rough","Fur Brown","Rough","Brown"],</p>
+<p class="p1">["Kislev Flesh","Layer","#d6a375","Dwarf Skin","Rough","Barbarian Flesh","Rough","Skin"],</p>
+<p class="p1">["Cadian Fleshtone","Base","#c47652","Elfic Flesh","Rough","Tanned Flesh","Close","Skin"],</p>
+<p class="p1">["Pallid Wych Flesh","Layer","#cdcebe","Elfic Flesh","Rough","Skeleton Bone","Rough","Skin"],</p>
+<p class="p1">["Naggaroth Night","Base","#3d3354","Imperial Purple","Rough","Alchemy Purple","Rough","Purple"],</p>
+<p class="p1">["Genestealer Purple","Layer","#7658a5","Warlord Purple","Close","Warlock Purple","Close","Purple"],</p>
+<p class="p1">["Screamer Pink","Layer","#7d1a49","Warlord Purple","Rough","Pixie Pink","Rough","Purple"]</p>
+<p class="p1">];</p>
+<p class="p1">const groups=["All",...new Set(P.map(r=&gt;r[7]))];</p>
+<p class="p1">let g="All";</p>
+<p class="p1">const $=id=&gt;document.getElementById(id);</p>
+<p class="p1">function render(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const q=$("q").value.trim().toLowerCase();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const rows=P.filter(r=&gt;(g==="All"||r[7]===g)&amp;&amp;(!q||r[0].toLowerCase().includes(q)||r[3].toLowerCase().includes(q)||r[5].toLowerCase().includes(q)));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>$("list").innerHTML=rows.length?rows.map(r=&gt;`&lt;div class="row"&gt;&lt;span class="sw" style="background:${r[2]}"&gt;&lt;/span&gt;&lt;div class="body"&gt;&lt;div&gt;&lt;span class="name"&gt;${r[0]}&lt;/span&gt;&lt;span class="type"&gt;Citadel ${r[1]}&lt;/span&gt;&lt;/div&gt;&lt;div class="eq"&gt;&lt;div&gt;&lt;b&gt;Vallejo&lt;/b&gt;${r[3]}&lt;span class="m"&gt;${r[4]}&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;b&gt;Army Painter&lt;/b&gt;${r[5]}&lt;span class="m"&gt;${r[6]}&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;`).join(""):`&lt;div class="empty"&gt;No match. Try part of a name, like "flesh" or "green".&lt;/div&gt;`;</p>
+<p class="p1">}</p>
+<p class="p1">$("chips").innerHTML=groups.map(x=&gt;`&lt;button class="chip" aria-pressed="${x===g}" data-g="${x}"&gt;${x}&lt;/button&gt;`).join("");</p>
+<p class="p1">$("chips").addEventListener("click",e=&gt;{const b=e.target.closest("button");if(!b)return;g=b.dataset.g;[...$("chips").children].forEach(c=&gt;c.setAttribute("aria-pressed",c.dataset.g===g));render()});</p>
+<p class="p1">$("q").addEventListener("input",render);</p>
+<p class="p1">render();</p>
+<p class="p1">&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;z</p>
+</body>
+</html>
