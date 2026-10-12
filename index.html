@@ -5,50 +5,59 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Paint Swap: Citadel equivalents</title>
 <style>
-:root{--bg:#f2efe9;--card:#fff;--ink:#23201c;--mute:#6b645b;--line:#d9d3c8;--acc:#7a3b1d;--tag:#e7e1d4;
+:root{--bg:#f2efe9;--card:#fff;--ink:#23201c;--mute:#6b645b;--line:#d9d3c8;--acc:#7a3b1d;--tag:#e7e1d4;--ok:#2f6b2a;--okbg:#e3efdc;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1c1a17;--card:#262320;--ink:#ede7dc;--mute:#9d9488;--line:#3a352f;--acc:#e0a46f;--tag:#34302a}}
-:root[data-theme="dark"]{--bg:#1c1a17;--card:#262320;--ink:#ede7dc;--mute:#9d9488;--line:#3a352f;--acc:#e0a46f;--tag:#34302a}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1c1a17;--card:#262320;--ink:#ede7dc;--mute:#9d9488;--line:#3a352f;--acc:#e0a46f;--tag:#34302a;--ok:#9fd08a;--okbg:#2a3a26}}
+:root[data-theme="dark"]{--bg:#1c1a17;--card:#262320;--ink:#ede7dc;--mute:#9d9488;--line:#3a352f;--acc:#e0a46f;--tag:#34302a;--ok:#9fd08a;--okbg:#2a3a26}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:Georgia,"Iowan Old Style",serif;line-height:1.5}
 main{max-width:760px;margin:0 auto;padding:28px 16px 60px}
 h1{font-size:2rem;margin:0 0 4px;letter-spacing:-.01em}
 .sub{color:var(--mute);margin:0 0 20px;font-size:.95rem}
-.controls{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px}
-.controls label{font-size:.75rem;color:var(--mute);display:block;margin-bottom:2px}
+.searchrow{display:grid;grid-template-columns:1fr 150px;gap:8px;margin-bottom:8px}
+.controls{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px}
+label.l{font-size:.75rem;color:var(--mute);display:block;margin-bottom:2px}
 input[type=search],select{width:100%;padding:11px 12px;font:inherit;border:1.5px solid var(--line);border-radius:6px;background:var(--card);color:var(--ink)}
-.search{margin-bottom:12px}
 input:focus,select:focus{outline:2px solid var(--acc);outline-offset:1px}
 .count{font-size:.82rem;color:var(--mute);margin:4px 0 14px}
 .row{background:var(--card);border:1px solid var(--line);border-radius:6px;margin-bottom:10px;display:grid;grid-template-columns:10px 1fr;overflow:hidden}
+.row.have{border-color:var(--ok)}
 .sw{display:block}
 .body{padding:12px 14px}
+.head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .name{font-weight:700;font-size:1.05rem}
-.type{font-size:.8rem;color:var(--mute);margin-left:6px;font-weight:400}
+.type{font-size:.8rem;color:var(--mute)}
+.badge{font-size:.72rem;padding:1px 8px;border-radius:10px;background:var(--okbg);color:var(--ok);font-weight:700}
 .eq{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;margin-top:8px}
 .eq.one{grid-template-columns:1fr}
 .eq div{font-size:.92rem}
 .eq b{display:block;font-size:.75rem;color:var(--mute);font-weight:400}
 .m{display:inline-block;font-size:.72rem;padding:1px 7px;border-radius:10px;background:var(--tag);margin-left:6px;color:var(--mute)}
+.own{display:inline-flex;align-items:center;gap:5px;font-size:.78rem;color:var(--mute);margin-top:3px;cursor:pointer}
+.own input{width:18px;height:18px;accent-color:var(--ok);margin:0}
 .empty{color:var(--mute);padding:24px 0;text-align:center}
 .note{font-size:.82rem;color:var(--mute);margin-top:24px;border-top:1px solid var(--line);padding-top:12px}
-@media(max-width:480px){.eq{grid-template-columns:1fr}.controls{grid-template-columns:1fr 1fr}.controls div:last-child{grid-column:1/-1}}
+@media(max-width:560px){.eq{grid-template-columns:1fr}.controls{grid-template-columns:1fr 1fr}.searchrow{grid-template-columns:1fr 120px}}
 </style>
 </head>
 <body>
 <main>
 <h1>Paint Swap</h1>
-<p class="sub">Find the Vallejo or Army Painter paint closest to a Citadel colour.</p>
-<div class="search"><input id="q" type="search" placeholder="Search a paint, e.g. Waaagh! Flesh" aria-label="Search paint"></div>
+<p class="sub">Find the Vallejo or Army Painter paint closest to a Citadel colour, and track what you own.</p>
+<div class="searchrow">
+  <div><label class="l" for="q">Search</label><input id="q" type="search" placeholder="e.g. Waaagh! Flesh" aria-label="Search paint"></div>
+  <div><label class="l" for="sSel">Search by</label><select id="sSel"><option value="any">Any brand</option><option value="c">Citadel</option><option value="v">Vallejo</option><option value="a">Army Painter</option></select></div>
+</div>
 <div class="controls">
-  <div><label for="gSel">Colour</label><select id="gSel"></select></div>
-  <div><label for="tSel">Type</label><select id="tSel"></select></div>
-  <div><label for="bSel">Show brand</label><select id="bSel"><option value="both">Both brands</option><option value="v">Vallejo only</option><option value="a">Army Painter only</option></select></div>
+  <div><label class="l" for="gSel">Colour</label><select id="gSel"></select></div>
+  <div><label class="l" for="tSel">Type</label><select id="tSel"></select></div>
+  <div><label class="l" for="bSel">Show brand</label><select id="bSel"><option value="both">Both brands</option><option value="v">Vallejo only</option><option value="a">Army Painter only</option></select></div>
+  <div><label class="l" for="oSel">Ownership</label><select id="oSel"><option value="">All paints</option><option value="have">I have an equivalent</option><option value="need">I need to buy</option></select></div>
 </div>
 <div class="count" id="count"></div>
 <div id="list"></div>
-<p class="note">Matches are best-effort colour approximations, not exact. "Close" means very similar; "Rough" means nearest available, so check swatches in person. Vallejo names are from the Game Color range. Colour dots are approximate.</p>
+<p class="note">Matches are best-effort colour approximations, not exact. "Close" means very similar; "Rough" means nearest available, so check swatches in person. Vallejo names are from the Game Color range. Colour dots are approximate. Ticks are saved on this device only.</p>
 </main>
 <script>
 // [citadel, type, hex, vallejo, vallejoMatch, armyPainter, apMatch, group]
@@ -111,21 +120,40 @@ const P=[
 ["Druchii Violet","Shade","#4a2a5a","Violet Wash","Rough","Purple Tone","Rough","Purple"]
 ];
 const $=id=>document.getElementById(id);
+const KEY="paintswap-owned";
+let owned={};
+try{owned=JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){owned={}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(owned))}catch(e){}}
+const has=(r,c)=>!!owned[r[0]+"|"+c];
+const anyOwned=r=>has(r,"c")||has(r,"v")||has(r,"a");
 const fill=(id,label,key)=>{
   const vals=[...new Set(P.map(r=>r[key]))].sort();
   $(id).innerHTML=`<option value="">${label}</option>`+vals.map(v=>`<option>${v}</option>`).join("");
 };
 fill("gSel","All colours",7);
 fill("tSel","All types",1);
-function render(){
-  const q=$("q").value.trim().toLowerCase(),g=$("gSel").value,t=$("tSel").value,b=$("bSel").value;
-  const rows=P.filter(r=>(!g||r[7]===g)&&(!t||r[1]===t)&&(!q||r[0].toLowerCase().includes(q)||r[3].toLowerCase().includes(q)||r[5].toLowerCase().includes(q)));
-  const v=r=>`<div><b>Vallejo</b>${r[3]}<span class="m">${r[4]}</span></div>`;
-  const a=r=>`<div><b>Army Painter</b>${r[5]}<span class="m">${r[6]}</span></div>`;
-  $("count").textContent=rows.length+(rows.length===1?" paint":" paints");
-  $("list").innerHTML=rows.length?rows.map(r=>`<div class="row"><span class="sw" style="background:${r[2]}"></span><div class="body"><div><span class="name">${r[0]}</span><span class="type">Citadel ${r[1]}</span></div><div class="eq${b==="both"?"":" one"}">${b!=="a"?v(r):""}${b!=="v"?a(r):""}</div></div></div>`).join(""):`<div class="empty">No match. Try part of a name, like "flesh" or "green".</div>`;
+function own(r,c){
+  return `<label class="own"><input type="checkbox" data-k="${r[0]}|${c}"${has(r,c)?" checked":""}>I own this</label>`;
 }
-["q","gSel","tSel","bSel"].forEach(id=>$(id).addEventListener("input",render));
+function render(){
+  const q=$("q").value.trim().toLowerCase(),s=$("sSel").value,g=$("gSel").value,t=$("tSel").value,b=$("bSel").value,o=$("oSel").value;
+  const hit=r=>{
+    if(!q)return true;
+    const c=r[0].toLowerCase().includes(q),v=r[3].toLowerCase().includes(q),a=r[5].toLowerCase().includes(q);
+    return s==="c"?c:s==="v"?v:s==="a"?a:(c||v||a);
+  };
+  const rows=P.filter(r=>(!g||r[7]===g)&&(!t||r[1]===t)&&hit(r)&&(o===""||(o==="have"?anyOwned(r):!anyOwned(r))));
+  const v=r=>`<div><b>Vallejo</b>${r[3]}<span class="m">${r[4]}</span><br>${own(r,"v")}</div>`;
+  const a=r=>`<div><b>Army Painter</b>${r[5]}<span class="m">${r[6]}</span><br>${own(r,"a")}</div>`;
+  $("count").textContent=rows.length+(rows.length===1?" paint":" paints");
+  $("list").innerHTML=rows.length?rows.map(r=>`<div class="row${anyOwned(r)?" have":""}"><span class="sw" style="background:${r[2]}"></span><div class="body"><div class="head"><span class="name">${r[0]}</span><span class="type">Citadel ${r[1]}</span>${anyOwned(r)?'<span class="badge">✓ Covered</span>':""}</div>${own(r,"c")}<div class="eq${b==="both"?"":" one"}">${b!=="a"?v(r):""}${b!=="v"?a(r):""}</div></div></div>`).join(""):`<div class="empty">No match. Try part of a name, like "flesh" or "green".</div>`;
+}
+$("list").addEventListener("change",e=>{
+  const k=e.target.dataset&&e.target.dataset.k;if(!k)return;
+  if(e.target.checked)owned[k]=1;else delete owned[k];
+  save();render();
+});
+["q","sSel","gSel","tSel","bSel","oSel"].forEach(id=>$(id).addEventListener("input",render));
 render();
 </script>
 </body>
