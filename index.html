@@ -15,32 +15,38 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:Georgia,"Iowan O
 main{max-width:760px;margin:0 auto;padding:28px 16px 60px}
 h1{font-size:2rem;margin:0 0 4px;letter-spacing:-.01em}
 .sub{color:var(--mute);margin:0 0 20px;font-size:.95rem}
-.bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-input[type=search]{flex:1 1 220px;padding:12px 14px;font:inherit;border:1.5px solid var(--line);border-radius:6px;background:var(--card);color:var(--ink)}
-input:focus,button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
-.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
-button.chip{font:inherit;font-size:.85rem;padding:6px 12px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:20px;cursor:pointer}
-button.chip[aria-pressed=true]{background:var(--acc);border-color:var(--acc);color:var(--bg)}
+.controls{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px}
+.controls label{font-size:.75rem;color:var(--mute);display:block;margin-bottom:2px}
+input[type=search],select{width:100%;padding:11px 12px;font:inherit;border:1.5px solid var(--line);border-radius:6px;background:var(--card);color:var(--ink)}
+.search{margin-bottom:12px}
+input:focus,select:focus{outline:2px solid var(--acc);outline-offset:1px}
+.count{font-size:.82rem;color:var(--mute);margin:4px 0 14px}
 .row{background:var(--card);border:1px solid var(--line);border-radius:6px;margin-bottom:10px;display:grid;grid-template-columns:10px 1fr;overflow:hidden}
 .sw{display:block}
 .body{padding:12px 14px}
 .name{font-weight:700;font-size:1.05rem}
 .type{font-size:.8rem;color:var(--mute);margin-left:6px;font-weight:400}
 .eq{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;margin-top:8px}
+.eq.one{grid-template-columns:1fr}
 .eq div{font-size:.92rem}
 .eq b{display:block;font-size:.75rem;color:var(--mute);font-weight:400}
 .m{display:inline-block;font-size:.72rem;padding:1px 7px;border-radius:10px;background:var(--tag);margin-left:6px;color:var(--mute)}
 .empty{color:var(--mute);padding:24px 0;text-align:center}
 .note{font-size:.82rem;color:var(--mute);margin-top:24px;border-top:1px solid var(--line);padding-top:12px}
-@media(max-width:480px){.eq{grid-template-columns:1fr}}
+@media(max-width:480px){.eq{grid-template-columns:1fr}.controls{grid-template-columns:1fr 1fr}.controls div:last-child{grid-column:1/-1}}
 </style>
 </head>
 <body>
 <main>
 <h1>Paint Swap</h1>
 <p class="sub">Find the Vallejo or Army Painter paint closest to a Citadel colour.</p>
-<div class="bar"><input id="q" type="search" placeholder="Search a Citadel paint, e.g. Waaagh! Flesh" aria-label="Search Citadel paint"></div>
-<div class="chips" id="chips"></div>
+<div class="search"><input id="q" type="search" placeholder="Search a paint, e.g. Waaagh! Flesh" aria-label="Search paint"></div>
+<div class="controls">
+  <div><label for="gSel">Colour</label><select id="gSel"></select></div>
+  <div><label for="tSel">Type</label><select id="tSel"></select></div>
+  <div><label for="bSel">Show brand</label><select id="bSel"><option value="both">Both brands</option><option value="v">Vallejo only</option><option value="a">Army Painter only</option></select></div>
+</div>
+<div class="count" id="count"></div>
 <div id="list"></div>
 <p class="note">Matches are best-effort colour approximations, not exact. "Close" means very similar; "Rough" means nearest available, so check swatches in person. Vallejo names are from the Game Color range. Colour dots are approximate.</p>
 </main>
@@ -93,19 +99,33 @@ const P=[
 ["Pallid Wych Flesh","Layer","#cdcebe","Elfic Flesh","Rough","Skeleton Bone","Rough","Skin"],
 ["Naggaroth Night","Base","#3d3354","Imperial Purple","Rough","Alchemy Purple","Rough","Purple"],
 ["Genestealer Purple","Layer","#7658a5","Warlord Purple","Close","Warlock Purple","Close","Purple"],
-["Screamer Pink","Layer","#7d1a49","Warlord Purple","Rough","Pixie Pink","Rough","Purple"]
+["Screamer Pink","Layer","#7d1a49","Warlord Purple","Rough","Pixie Pink","Rough","Purple"],
+["Agrax Earthshade","Shade","#4a3a2e","Sepia Wash","Rough","Strong Tone","Close","Brown"],
+["Nuln Oil","Shade","#1a1a1a","Black Wash","Close","Dark Tone","Close","Neutral"],
+["Reikland Fleshshade","Shade","#a4512f","Flesh Wash","Close","Soft Tone","Rough","Skin"],
+["Seraphim Sepia","Shade","#c8873f","Sepia Wash","Close","Light Tone","Rough","Brown"],
+["Carroburg Crimson","Shade","#8a1f33","Red Wash","Close","Red Tone","Close","Red"],
+["Coelia Greenshade","Shade","#2e6b57","Green Wash","Rough","Green Tone","Rough","Green"],
+["Biel-Tan Green","Shade","#2f6b2a","Green Wash","Close","Green Tone","Close","Green"],
+["Drakenhof Nightshade","Shade","#1d3f6b","Blue Wash","Close","Blue Tone","Close","Blue"],
+["Druchii Violet","Shade","#4a2a5a","Violet Wash","Rough","Purple Tone","Rough","Purple"]
 ];
-const groups=["All",...new Set(P.map(r=>r[7]))];
-let g="All";
 const $=id=>document.getElementById(id);
+const fill=(id,label,key)=>{
+  const vals=[...new Set(P.map(r=>r[key]))].sort();
+  $(id).innerHTML=`<option value="">${label}</option>`+vals.map(v=>`<option>${v}</option>`).join("");
+};
+fill("gSel","All colours",7);
+fill("tSel","All types",1);
 function render(){
-  const q=$("q").value.trim().toLowerCase();
-  const rows=P.filter(r=>(g==="All"||r[7]===g)&&(!q||r[0].toLowerCase().includes(q)||r[3].toLowerCase().includes(q)||r[5].toLowerCase().includes(q)));
-  $("list").innerHTML=rows.length?rows.map(r=>`<div class="row"><span class="sw" style="background:${r[2]}"></span><div class="body"><div><span class="name">${r[0]}</span><span class="type">Citadel ${r[1]}</span></div><div class="eq"><div><b>Vallejo</b>${r[3]}<span class="m">${r[4]}</span></div><div><b>Army Painter</b>${r[5]}<span class="m">${r[6]}</span></div></div></div></div>`).join(""):`<div class="empty">No match. Try part of a name, like "flesh" or "green".</div>`;
+  const q=$("q").value.trim().toLowerCase(),g=$("gSel").value,t=$("tSel").value,b=$("bSel").value;
+  const rows=P.filter(r=>(!g||r[7]===g)&&(!t||r[1]===t)&&(!q||r[0].toLowerCase().includes(q)||r[3].toLowerCase().includes(q)||r[5].toLowerCase().includes(q)));
+  const v=r=>`<div><b>Vallejo</b>${r[3]}<span class="m">${r[4]}</span></div>`;
+  const a=r=>`<div><b>Army Painter</b>${r[5]}<span class="m">${r[6]}</span></div>`;
+  $("count").textContent=rows.length+(rows.length===1?" paint":" paints");
+  $("list").innerHTML=rows.length?rows.map(r=>`<div class="row"><span class="sw" style="background:${r[2]}"></span><div class="body"><div><span class="name">${r[0]}</span><span class="type">Citadel ${r[1]}</span></div><div class="eq${b==="both"?"":" one"}">${b!=="a"?v(r):""}${b!=="v"?a(r):""}</div></div></div>`).join(""):`<div class="empty">No match. Try part of a name, like "flesh" or "green".</div>`;
 }
-$("chips").innerHTML=groups.map(x=>`<button class="chip" aria-pressed="${x===g}" data-g="${x}">${x}</button>`).join("");
-$("chips").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;g=b.dataset.g;[...$("chips").children].forEach(c=>c.setAttribute("aria-pressed",c.dataset.g===g));render()});
-$("q").addEventListener("input",render);
+["q","gSel","tSel","bSel"].forEach(id=>$(id).addEventListener("input",render));
 render();
 </script>
 </body>
