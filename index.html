@@ -19,8 +19,10 @@ h1{font-size:2rem;margin:0 0 4px;letter-spacing:-.01em}
 .controls{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px}
 label.l{font-size:.75rem;color:var(--mute);display:block;margin-bottom:2px}
 input[type=search],select{width:100%;padding:11px 12px;font:inherit;border:1.5px solid var(--line);border-radius:6px;background:var(--card);color:var(--ink)}
-input:focus,select:focus{outline:2px solid var(--acc);outline-offset:1px}
-.count{font-size:.82rem;color:var(--mute);margin:4px 0 14px}
+input:focus,select:focus,button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.count{font-size:.82rem;color:var(--mute)}
+.bar2{display:flex;justify-content:space-between;align-items:center;margin:8px 0 14px;min-height:34px}
+#allBtn{font:inherit;font-size:.85rem;padding:7px 14px;border:1.5px solid var(--acc);background:var(--acc);color:var(--bg);border-radius:20px;cursor:pointer}
 .row{background:var(--card);border:1px solid var(--line);border-radius:6px;margin-bottom:10px;display:grid;grid-template-columns:10px 1fr;overflow:hidden}
 .row.have{border-color:var(--ok)}
 .sw{display:block}
@@ -55,7 +57,7 @@ input:focus,select:focus{outline:2px solid var(--acc);outline-offset:1px}
   <div><label class="l" for="bSel">Show brand</label><select id="bSel"><option value="both">Both brands</option><option value="v">Vallejo only</option><option value="a">Army Painter only</option></select></div>
   <div><label class="l" for="oSel">Ownership</label><select id="oSel"><option value="">All paints</option><option value="have">I have an equivalent</option><option value="need">I need to buy</option></select></div>
 </div>
-<div class="count" id="count"></div>
+<div class="bar2"><span class="count" id="count"></span><button id="allBtn" type="button">Show all</button></div>
 <div id="list"></div>
 <p class="note">Matches are best-effort colour approximations, not exact. "Close" means very similar; "Rough" means nearest available, so check swatches in person. Vallejo names are from the Game Color range. Colour dots are approximate. Ticks are saved on this device only.</p>
 </main>
@@ -122,6 +124,7 @@ const P=[
 const $=id=>document.getElementById(id);
 const KEY="paintswap-owned";
 let owned={};
+let showAll=false;
 try{owned=JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){owned={}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(owned))}catch(e){}}
 const has=(r,c)=>!!owned[r[0]+"|"+c];
@@ -137,6 +140,13 @@ function own(r,c){
 }
 function render(){
   const q=$("q").value.trim().toLowerCase(),s=$("sSel").value,g=$("gSel").value,t=$("tSel").value,b=$("bSel").value,o=$("oSel").value;
+  if(!(showAll||q||g||t||o)){
+    $("count").textContent="";
+    $("allBtn").textContent="Show all";
+    $("list").innerHTML='<div class="empty">Search for a paint, pick a filter, or tap Show all.</div>';
+    return;
+  }
+  $("allBtn").textContent=showAll?"Hide all":"Show all";
   const hit=r=>{
     if(!q)return true;
     const c=r[0].toLowerCase().includes(q),v=r[3].toLowerCase().includes(q),a=r[5].toLowerCase().includes(q);
@@ -153,7 +163,13 @@ $("list").addEventListener("change",e=>{
   if(e.target.checked)owned[k]=1;else delete owned[k];
   save();render();
 });
-["q","sSel","gSel","tSel","bSel","oSel"].forEach(id=>$(id).addEventListener("input",render));
+["q","sSel","gSel","tSel","oSel"].forEach(id=>$(id).addEventListener("input",()=>{showAll=false;render()}));
+$("bSel").addEventListener("input",render);
+$("allBtn").addEventListener("click",()=>{
+  if(showAll){showAll=false}
+  else{showAll=true;$("q").value="";["sSel","gSel","tSel","oSel"].forEach(id=>$(id).selectedIndex=0)}
+  render();
+});
 render();
 </script>
 </body>
